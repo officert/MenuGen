@@ -1,7 +1,6 @@
-﻿using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 
-namespace MenuGen.SampleApp
+namespace MenuGen.SampleApp.App_Start
 {
     public class FilterConfig
     {

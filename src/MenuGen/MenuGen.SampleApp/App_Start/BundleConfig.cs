@@ -1,7 +1,6 @@
-﻿using System.Web;
-using System.Web.Optimization;
+﻿using System.Web.Optimization;
 
-namespace MenuGen.SampleApp
+namespace MenuGen.SampleApp.App_Start
 {
     public class BundleConfig
     {
