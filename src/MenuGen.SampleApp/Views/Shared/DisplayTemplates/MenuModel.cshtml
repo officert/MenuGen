@@ -1,13 +1,18 @@
-﻿@model MenuGen.Core.MenuModel
+﻿@model MenuGen.Models.MenuModel
 
 <ul>
     @foreach (var node in Model.MenuNodes)
     {
         <li>
             @Html.DisplayFor(m => node)
-            @if (node.ChildMenu != null && node.ChildMenu.MenuNodes != null && node.ChildMenu.MenuNodes.Any())
+            @if (node.ChildNodes != null && node.ChildNodes != null && node.ChildNodes.Any())
             {
-                @Html.DisplayFor(x => node.ChildMenu);
+                <ul>
+                    @foreach (var childNode in node.ChildNodes)
+                    {
+                        <li>@Html.DisplayFor(x => childNode)</li>
+                    }
+                </ul>
             }
         </li>
     }

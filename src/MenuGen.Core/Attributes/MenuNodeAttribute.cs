@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MenuGen.Core.Attributes
+namespace MenuGen.Attributes
 {
     [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
     public class MenuNodeAttribute : Attribute

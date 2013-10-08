@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace MenuGen.Core
+namespace MenuGen.Models
 {
     public class MenuNodeModel
     {
@@ -11,13 +11,11 @@ namespace MenuGen.Core
         public string ActionName { get; set; }
         public bool Clickable { get; set; }
 
-        public MenuModel ChildMenu { get; set; }
+        public ICollection<MenuNodeModel> ChildNodes { get; set; }
 
         public bool IsActive { get; set; }
 
         public string Key { get; set; }
         public string ParentKey { get; set; }
-
-        public IEnumerable<string> MenuNames { get; set; } 
     }
 }

@@ -1,4 +1,4 @@
-﻿@model MenuGen.Core.MenuModel
+﻿@model MenuGen.Models.MenuModel
 
 <style type="text/css">
     #fancyMenu {
@@ -29,9 +29,9 @@
     {
         <li>
             @Html.DisplayFor(m => node)
-            @if (node.ChildMenu != null && node.ChildMenu.MenuNodes != null && node.ChildMenu.MenuNodes.Any())
+            @if (node.ChildNodes != null && node.ChildNodes != null && node.ChildNodes.Any())
             {
-                @Html.DisplayFor(x => node.ChildMenu, "FancyMenu");
+                @Html.DisplayFor(x => node.ChildNodes, "FancyMenu");
             }
         </li>
     }

@@ -1,9 +1,7 @@
-﻿using System.Reflection;
-using System.Web.Http;
+﻿using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-using MenuGen.Core;
 using MenuGen.SampleApp.App_Start;
 
 namespace MenuGen.SampleApp
@@ -22,7 +20,7 @@ namespace MenuGen.SampleApp
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            MenuGenerator.Scan(Assembly.GetExecutingAssembly());
+            MenuGen.Init();
         }
     }
 }
