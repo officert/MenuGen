@@ -74,14 +74,14 @@
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="IMenuNodeTreeBuilder.cs" />
     <Compile Include="Models\MenuModel.cs" />
-    <Compile Include="MenuNodeTreeGenerators\IMenuNodeTreeGenerator.cs" />
+    <Compile Include="MenuNodeGenerators\IMenuNodeGenerator.cs" />
     <Compile Include="Ioc\BasicContainer.cs" />
     <Compile Include="Ioc\IContainer.cs" />
     <Compile Include="Ioc\IContainerAdapter.cs" />
     <Compile Include="MenuNodeTreeBuilder.cs" />
     <Compile Include="MenuBase.cs" />
-    <Compile Include="MenuNodeTreeGenerators\MenuNodeTreeGeneratorBase.cs" />
-    <Compile Include="MenuNodeTreeGenerators\ReflectionMenuGenerator.cs" />
+    <Compile Include="MenuNodeGenerators\MenuNodeGeneratorBase.cs" />
+    <Compile Include="MenuNodeGenerators\ReflectionMenuNodeGenerator.cs" />
     <Compile Include="Models\MenuNodeModel.cs" />
     <Compile Include="MenuGen.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

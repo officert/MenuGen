@@ -1,8 +1,8 @@
-﻿using MenuGen.MenuNodeTreeGenerators;
+﻿using MenuGen.MenuNodeGenerators;
 
 namespace MenuGen.SampleApp.Menus
 {
-    public class HeaderNav : MenuBase<ReflectionMenuGenerator>
+    public class HeaderMenu : MenuBase<ReflectionMenuNodeGenerator>
     {
     }
 }

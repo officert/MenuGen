@@ -1,9 +1,8 @@
-﻿using MenuGen.MenuNodeTreeGenerators;
+﻿using MenuGen.MenuNodeGenerators;
 
 namespace MenuGen
 {
-    public abstract class MenuBase<TNodeGenerator> where TNodeGenerator : IMenuNodeTreeGenerator
+    public abstract class MenuBase<TNodeGenerator> where TNodeGenerator : IMenuNodeGenerator
     {
-
     }
 }

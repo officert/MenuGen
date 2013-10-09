@@ -5,14 +5,9 @@
     {
         <li>
             @Html.DisplayFor(m => node)
-            @if (node.ChildNodes != null && node.ChildNodes != null && node.ChildNodes.Any())
+            @if (node.ChildMenu != null)
             {
-                <ul>
-                    @foreach (var childNode in node.ChildNodes)
-                    {
-                        <li>@Html.DisplayFor(x => childNode)</li>
-                    }
-                </ul>
+                @Html.DisplayFor(x => node.ChildMenu);
             }
         </li>
     }

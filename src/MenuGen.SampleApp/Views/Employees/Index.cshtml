@@ -1,7 +1,22 @@
-﻿@{
+﻿@using MenuGen.Extensions
+@using MenuGen.SampleApp.Menus
+@{
     ViewBag.Title = "Index";
 }
+<div class="page-header">
+    <h2>Our Employees</h2>
+</div>
+<div class="col-md-8">
+    @Html.GetMenu(typeof(EmployeesMenu))
+</div>
+<div class="col-md-4">
+    <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque euismod libero vel mi dapibus, nec suscipit eros tincidunt. Vivamus in diam felis. Nulla mollis posuere auctor. Donec ultricies fringilla purus, sit amet porttitor arcu dignissim sit amet. Integer iaculis consectetur porta. Sed dictum est non leo porttitor, vel tincidunt ante placerat. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent quis velit aliquam neque dapibus volutpat.
 
-<h2>Index</h2>
+Cras consectetur non eros pellentesque cursus. Sed eu neque dictum, laoreet augue nec, ultricies mauris. Praesent erat ipsum, porttitor non eleifend id, dignissim at nisl. Donec scelerisque eu velit ac vehicula. Integer vestibulum, mauris congue tempus varius, risus nibh lacinia tortor, eget aliquet tellus libero vel nisi. Aliquam cursus aliquam ante, id molestie leo pulvinar non. Aliquam dictum lobortis nisi vel dignissim. Aenean nisl est, cursus nec nisi vel, lacinia convallis sapien. In blandit turpis aliquet augue rhoncus adipiscing quis sed ligula. Quisque massa turpis, faucibus in augue ac, gravida bibendum elit. Phasellus eu tortor purus. Sed vulputate turpis massa, at consectetur quam pellentesque vitae. Donec quis elit ultricies, tincidunt turpis eu, varius augue. Morbi pellentesque sodales augue.
 
-<h4>Our Employees</h4>
+Donec mollis, sem a rutrum malesuada, eros ipsum laoreet metus, facilisis consequat orci arcu at urna. Maecenas mollis justo non molestie pulvinar. Curabitur dictum nisi vitae sapien commodo, sed condimentum ligula tincidunt. Integer consequat posuere massa. Nulla tempor ante ut quam pulvinar cursus. Ut laoreet bibendum arcu vitae egestas. Etiam tincidunt luctus risus, congue congue ante accumsan ut. Nam congue sem ante. Curabitur eu est tellus. Donec tristique consectetur dolor. Praesent sollicitudin, tortor ac hendrerit dignissim, velit neque commodo felis, in pretium lacus nunc a nisl. Donec volutpat est in sapien semper, nec elementum quam blandit.
+
+Nam a nisl a dolor molestie faucibus. Donec posuere neque arcu. Vivamus arcu nisi, elementum sed auctor imperdiet, suscipit non eros. Sed quis egestas velit, et condimentum quam. Donec dapibus, velit vitae blandit egestas, dolor velit sollicitudin nisl, eget porta nisi quam vel neque. Duis facilisis dolor neque, non laoreet leo bibendum sit amet. Donec a neque ac justo sodales malesuada at id velit. Nulla egestas varius ipsum at consequat. Morbi pretium pharetra nisl eu pellentesque. Pellentesque non lorem ac tortor cursus dictum. Pellentesque et enim lacus. Suspendisse vitae nunc eget eros adipiscing mollis. Nulla consectetur diam ac pulvinar vehicula. Donec ac mollis dolor, sed fringilla libero.
+    </p>
+</div>
