@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using MenuGen.Extensions;
+using MenuGen.Ioc;
 using MenuGen.MenuNodeGenerators;
 using MenuGen.Models;
 
 namespace MenuGen
 {
-    public static class MenuGen
+    public class MenuGen
     {
+        private static readonly BasicContainer Container = new BasicContainer();
         private static readonly Dictionary<string, IMenuNodeGenerator> MenuNodeGenerators = new Dictionary<string, IMenuNodeGenerator>();
         private static readonly IMenuNodeTreeBuilder MenuNodeTreeBuilder = new MenuNodeTreeBuilder();
 
@@ -20,8 +23,13 @@ namespace MenuGen
             return Menus.FirstOrDefault(x => x.Name == menuName);
         }
 
-        public static void Init()
+        public static void Init(Action<BasicContainer> containerSetup = null)
         {
+            if (containerSetup != null)
+            {
+                containerSetup(Container);
+            }
+
             var assembly = Assembly.GetCallingAssembly();
 
             var menuImpls = GetSubClassesOfGenericType(assembly.GetTypes(), typeof(MenuBase<IMenuNodeGenerator>));

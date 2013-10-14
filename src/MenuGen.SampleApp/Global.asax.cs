@@ -2,7 +2,9 @@
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using MenuGen.Ioc;
 using MenuGen.SampleApp.App_Start;
+using MenuGen.SampleApp.Controllers;
 
 namespace MenuGen.SampleApp
 {
@@ -20,7 +22,23 @@ namespace MenuGen.SampleApp
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            MenuGen.Init();
+            MenuGen.Init(x =>
+            {
+                x.ContainerAdapter = new NinjectContainerAdapter();
+            });
+        }
+    }
+
+    public class NinjectContainerAdapter : IContainerAdapter
+    {
+        public T Resolve<T>(T type) where T : System.Type
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Register<T>(T type) where T : System.Type
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

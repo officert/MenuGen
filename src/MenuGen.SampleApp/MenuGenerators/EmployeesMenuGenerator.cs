@@ -49,6 +49,24 @@ namespace MenuGen.SampleApp.MenuGenerators
                     Clickable = true,
                     Key = "MorganFreeman",
                     Text = "Morgan Freeman"
+                },
+                new MenuNodeModel
+                {
+                    ActionName = "Index",
+                    ControllerName = "Employees",
+                    IsActive = true,
+                    Clickable = true,
+                    Key = "AshtonKutcher",
+                    Text = "Ashton Kutcher"
+                },
+                new MenuNodeModel
+                {
+                    ActionName = "Index",
+                    ControllerName = "Employees",
+                    IsActive = true,
+                    Clickable = true,
+                    Key = "BobSaggat",
+                    Text = "Bob Saggat"
                 }
             };
             return menuNodes;

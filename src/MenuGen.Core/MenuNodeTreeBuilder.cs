@@ -10,8 +10,6 @@ namespace MenuGen
         {
             //TODO: what about duplicate keys??
 
-            //TODO: what about dynamically generated menu links?
-
             //TODO: can keys contain spaces? is foobar the same as foo bar?
 
             //http://stackoverflow.com/a/444303/1647062

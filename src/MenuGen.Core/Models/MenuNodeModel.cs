@@ -17,6 +17,8 @@ namespace MenuGen.Models
         public string Key { get; set; }
         public string ParentKey { get; set; }
 
+        public object HtmlAttributes { get; set; }
+
         public MenuNodeModel()
         {
             ChildMenu = new MenuModel();
