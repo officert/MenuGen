@@ -1,57 +1,47 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using MenuGen.Extensions;
 
 namespace MenuGen.Ioc
 {
     public class BasicContainer : IContainer
     {
         private readonly Dictionary<string, Type> _typeDictionary;
-        private IContainerAdapter _containerAdapter;
 
         public BasicContainer()
         {
             _typeDictionary = new Dictionary<string, Type>();
         }
 
-        public T Resolve<T>(T type) where T : Type
-        {
-            if (_containerAdapter != null)
-            {
-                return _containerAdapter.Resolve(type);
-            }
-            else
-            {
-                if (_typeDictionary.ContainsValue(type))
-                {
-                    return (T)Activator.CreateInstance(_typeDictionary.First(x => x.Value == type).Value);
-                }
-                //return (T)Activator.CreateInstance(type);
-                throw new ArgumentException("");    //throw a different exception - TODO : create a registry not found exception or something
-            }
-        }
-
         public void Register<T>(T type) where T : Type
         {
-            if (_containerAdapter != null)
-            {
-                _containerAdapter.Register(type);
-                return;
-            }
-
             _typeDictionary.Add(type.Name, type);
         }
 
-        public IContainerAdapter ContainerAdapter
+        public T GetInstance<T>(Type type) where T : class
         {
-            get
+            var constructor = type.GetConstructor(Type.EmptyTypes);
+
+            if (constructor != null) return Activator.CreateInstance(type).Cast<T>();
+
+            var constructors = type.GetConstructors(BindingFlags.Public);
+            foreach (var constructorInfo in constructors)
             {
-                return _containerAdapter;
+                var constructorArgs = constructorInfo.GetParameters().ToList();
             }
-            set
-            {
-                _containerAdapter = value;
-            }
+            return null;
+        }
+
+        public IEnumerable<T> GetInstances<T>(Type type) where T : class
+        {
+            throw new NotImplementedException();
+        }
+
+        public ContainerMapping For<T>() where T : class
+        {
+            throw new NotImplementedException();
         }
     }
 }

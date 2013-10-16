@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
 using MenuGen.Extensions;
 using MenuGen.Ioc;
@@ -12,8 +11,8 @@ namespace MenuGen
 {
     public class MenuGen
     {
-        private static readonly BasicContainer Container = new BasicContainer();
-        private static readonly Dictionary<string, IMenuNodeGenerator> MenuNodeGenerators = new Dictionary<string, IMenuNodeGenerator>();
+        private BasicContainer _container;
+        private IContainerAdapter _containerAdapter;
         private static readonly IMenuNodeTreeBuilder MenuNodeTreeBuilder = new MenuNodeTreeBuilder();
 
         private static readonly ICollection<MenuModel> Menus = new List<MenuModel>();
@@ -23,56 +22,59 @@ namespace MenuGen
             return Menus.FirstOrDefault(x => x.Name == menuName);
         }
 
-        public static void Init(Action<BasicContainer> containerSetup = null)
+        public void Init(Action<MenuGenSetup> setup)
         {
-            if (containerSetup != null)
+            _container = new BasicContainer();
+            _containerAdapter = new InternalContainerAdapter(_container);
+
+            var menuGenOptions = new MenuGenSetup
             {
-                containerSetup(Container);
-            }
+                Container = _container,
+                ContainerAdapter = _containerAdapter
+            };
+
+            //setup(menuGenOptions);
+
+            //_container.For<IMenuNodeGenerator>().Use<ReflectionMenuNodeGenerator>();
+            //TODO: register an XML node generator
 
             var assembly = Assembly.GetCallingAssembly();
 
-            var menuImpls = GetSubClassesOfGenericType(assembly.GetTypes(), typeof(MenuBase<IMenuNodeGenerator>));
+            var menuImpls = GetSubClassesOfGenericType<MenuBase<IMenuNodeGenerator>>(assembly.GetTypes());
 
             foreach (var menuImpl in menuImpls)
             {
                 var menuGeneratorType = GetMenuGeneratorType(menuImpl);
-                IMenuNodeGenerator menuNodeTreeGeneratorInstance;
 
-                if (MenuNodeGenerators.ContainsKey(menuGeneratorType.Name))
+                //var menuNodeGenerator = _containerAdapter.GetInstance<IMenuNodeGenerator>(menuGeneratorType);
+
+                IMenuNodeGenerator menuNodeGenerator;
+
+                var constructor = menuGeneratorType.GetConstructors().FirstOrDefault();
+                List<ParameterInfo> constructorArgs = null;
+
+                if (constructor != null)
                 {
-                    menuNodeTreeGeneratorInstance = MenuNodeGenerators[menuGeneratorType.Name];
+                    constructorArgs = constructor.GetParameters().ToList();
+                }
+
+                //TODO: creation of MenuGenerator instances should be delegated to an IOC container - a lightweight internal one
+                //TODO: that can be swapped out for whatever IOC the user wants to use. That way a user can have their IOC inject any
+                //TODO: other instances that their MenuGenerator needs to generate menu nodes - (ie. some data access service, etc...)
+
+                if (constructorArgs != null && constructorArgs.Count > 1)
+                {
+                    menuNodeGenerator = Activator.CreateInstance(menuGeneratorType, MenuNodeTreeBuilder, assembly).Cast<IMenuNodeGenerator>();
                 }
                 else
                 {
-                    var constructor = menuGeneratorType.GetConstructors().FirstOrDefault();
-                    List<ParameterInfo> constructorArgs = null;
-
-                    if (constructor != null)
-                    {
-                        constructorArgs = constructor.GetParameters().ToList();
-                    }
-
-                    //TODO: creation of MenuGenerator instances should be delegated to an IOC container - a lightweight internal one
-                    //TODO: that can be swapped out for whatever IOC the user wants to use. That way a user can have their IOC inject any
-                    //TODO: other instances that their MenuGenerator needs to generate menu nodes - (ie. some data access service, etc...)
-
-                    if (constructorArgs != null && constructorArgs.Count > 1)
-                    {
-                        menuNodeTreeGeneratorInstance = Activator.CreateInstance(menuGeneratorType, MenuNodeTreeBuilder, assembly).Cast<IMenuNodeGenerator>();
-                    }
-                    else
-                    {
-                        menuNodeTreeGeneratorInstance = Activator.CreateInstance(menuGeneratorType, MenuNodeTreeBuilder).Cast<IMenuNodeGenerator>();
-                    }
-
-                    MenuNodeGenerators.Add(menuGeneratorType.Name, menuNodeTreeGeneratorInstance);
+                    menuNodeGenerator = Activator.CreateInstance(menuGeneratorType, MenuNodeTreeBuilder).Cast<IMenuNodeGenerator>();
                 }
 
                 var menu = new MenuModel
                 {
                     Name = menuImpl.Name,
-                    MenuNodes = menuNodeTreeGeneratorInstance.BuildMenuNodeTrees().ToList()
+                    MenuNodes = menuNodeGenerator.BuildMenuNodeTrees().ToList()
                 };
 
                 Menus.Add(menu);
@@ -81,24 +83,30 @@ namespace MenuGen
 
         #region Private Helpers
 
-        private static IEnumerable<Type> GetSubClassesOfGenericType(IEnumerable<Type> types, Type typeToCheckAgainst)
+        private static IEnumerable<Type> GetSubClassesOfGenericType<T>(IEnumerable<Type> types) where T : class 
         {
-            return types.Where(x => IsSubTypeOf(x, typeToCheckAgainst));
+            return types.Where(IsSubTypeOf<T>);
         }
 
-        private static bool IsSubTypeOf(Type typeToCheckFrom, Type typeToCheckAgainst)
+        private static bool IsSubTypeOf<T>(Type typeToCheckFrom) where T : class
         {
-            if (typeToCheckFrom.IsGenericType
-                && typeToCheckFrom.GetGenericTypeDefinition() == typeToCheckAgainst.GetGenericTypeDefinition())
+            while (true)
             {
-                return true;
-            }
-            if (typeToCheckFrom.BaseType != null)
-            {
-                return IsSubTypeOf(typeToCheckFrom.BaseType, typeToCheckAgainst);
-            }
+                var typeToCheckAgainst = typeof (T);
 
-            return false;
+                if (typeToCheckFrom.IsGenericType && typeToCheckFrom.GetGenericTypeDefinition() == typeToCheckAgainst.GetGenericTypeDefinition())
+                {
+                    return true;
+                }
+                if (typeToCheckFrom.BaseType != null)
+                {
+                    typeToCheckFrom = typeToCheckFrom.BaseType;
+                    continue;
+                }
+
+                return false;
+                break;
+            }
         }
 
         private static Type GetMenuGeneratorType(Type menuImpl)
@@ -107,5 +115,41 @@ namespace MenuGen
         }
 
         #endregion
+    }
+
+    public class InternalContainerAdapter : IContainerAdapter
+    {
+        private readonly IContainer _container;
+
+        public InternalContainerAdapter(IContainer container)
+        {
+            _container = container;
+        }
+
+        public T GetInstance<T>(Type type) where T : class
+        {
+            return _container.GetInstance<T>(type);
+        }
+
+        public IEnumerable<T> GetInstances<T>(Type type) where T : class
+        {
+            return _container.GetInstances<T>(type);
+        }
+
+        public void Register<T>(Type type) where T : class
+        {
+            throw new NotImplementedException();
+        }
+
+        public ContainerMapping For<T>() where T : class
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class MenuGenSetup
+    {
+        public IContainer Container { get; set; }
+        public IContainerAdapter ContainerAdapter { get; set; }
     }
 }

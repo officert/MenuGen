@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MenuGen.Ioc
 {
     public interface IContainerAdapter
     {
-        T Resolve<T>(T type) where T : Type;
-        void Register<T>(T type) where T : Type;
+        T GetInstance<T>(Type type) where T : class;
+        IEnumerable<T> GetInstances<T>(Type type) where T : class;
     }
 }
