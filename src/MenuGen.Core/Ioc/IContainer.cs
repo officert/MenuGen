@@ -5,24 +5,9 @@ namespace MenuGen.Ioc
 {
     public interface IContainer
     {
-        T GetInstance<T>(Type type) where T : class;
-        IEnumerable<T> GetInstances<T>(Type type) where T : class;
-        ContainerMapping For<T>() where T : class;
-    }
-
-    public class ContainerMapping
-    {
-        public ContainerMappingOptions Use<T>() where T : class
-        {
-            return new ContainerMappingOptions();
-        }
-    }
-
-    public class ContainerMappingOptions
-    {
-        public string Named(string name)
-        {
-            return "";
-        }
+        //T GetInstance<T>() where T : class;
+        object GetInstance(Type type);
+        IEnumerable<object> GetInstances(Type type) ;
+        DependencyMap For<T>() where T : class;
     }
 }

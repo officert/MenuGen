@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using MenuGen.Extensions;
@@ -8,40 +9,95 @@ namespace MenuGen.Ioc
 {
     public class BasicContainer : IContainer
     {
-        private readonly Dictionary<string, Type> _typeDictionary;
+        private readonly ICollection<DependencyMap> _dependencyMaps;
 
         public BasicContainer()
         {
-            _typeDictionary = new Dictionary<string, Type>();
+            _dependencyMaps = new Collection<DependencyMap>();
         }
 
-        public void Register<T>(T type) where T : Type
+        //public void Register<T>(T type) where T : Type
+        //{
+        //    _typeDictionary.Add(type.Name, type);
+        //}
+
+        //public T GetInstance<T>() where T : class
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        /// <summary>
+        /// If a dependency map has already been registered for type, this will return an instance of the passed type with all of its dependencies.
+        /// </summary>
+        public object GetInstance(Type type)
         {
-            _typeDictionary.Add(type.Name, type);
-        }
+            var mapForType = FindDependencyMaps(type).FirstOrDefault();
 
-        public T GetInstance<T>(Type type) where T : class
-        {
-            var constructor = type.GetConstructor(Type.EmptyTypes);
+            if (mapForType == null) throw new InvalidOperationException(string.Format("no type map exists for type {0}", type));
 
-            if (constructor != null) return Activator.CreateInstance(type).Cast<T>();
+            if (mapForType.Instance != null) return mapForType.Instance;
 
-            var constructors = type.GetConstructors(BindingFlags.Public);
-            foreach (var constructorInfo in constructors)
+            var constructors = type.GetConstructors();
+            var ctor = constructors.FirstOrDefault();
+
+            if (mapForType.ConcreteType.HasADefaultConstructor() || ctor == null) //TODO: should no constructor just create the instance, since there are no dependencies to resolve??
             {
-                var constructorArgs = constructorInfo.GetParameters().ToList();
+                mapForType.Instance = Activator.CreateInstance(mapForType.ConcreteType);
+
+                return mapForType.Instance;
             }
-            return null;
+
+            var constructorArgs = ctor.GetParameters().ToList();
+            var argObjs = new List<object>();
+
+            foreach (var constructorArg in constructorArgs)
+            {
+                argObjs.Add(GetInstance(constructorArg.ParameterType));
+            }
+            mapForType.Instance = Activator.CreateInstance(mapForType.ConcreteType, argObjs.ToArray());
+
+            return mapForType.Instance;
         }
 
-        public IEnumerable<T> GetInstances<T>(Type type) where T : class
+        public IEnumerable<object> GetInstances(Type type)
         {
-            throw new NotImplementedException();
+            var maps = FindDependencyMaps(type).ToList();
+
+            if (maps == null || !maps.Any()) throw new InvalidOperationException(string.Format("no mapping found for type '{0}'", type));
+
+            return maps;
         }
 
-        public ContainerMapping For<T>() where T : class
+        public DependencyMap For<T>() where T : class
         {
-            throw new NotImplementedException();
+            var map = new DependencyMap
+            {
+                AbstractType = typeof(T)
+            };
+
+            _dependencyMaps.Add(map);
+
+            return map;
+        }
+
+        private IEnumerable<DependencyMap> FindDependencyMaps(Type type)
+        {
+            if (type == null) return null;
+
+            if (type.IsInterface)
+            {
+                return _dependencyMaps.Where(x => x.AbstractType == type);
+            }
+
+            return _dependencyMaps.Where(x => x.ConcreteType == type);
+        }
+    }
+
+    public static class TypeExtensions
+    {
+        public static bool HasADefaultConstructor(this Type type)
+        {
+            return type.GetConstructor(Type.EmptyTypes) != null;
         }
     }
 }

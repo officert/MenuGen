@@ -73,6 +73,7 @@
     <Compile Include="Extensions\HtmlHelperExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="IMenuNodeTreeBuilder.cs" />
+    <Compile Include="Ioc\DependencyMap.cs" />
     <Compile Include="Models\MenuModel.cs" />
     <Compile Include="MenuNodeGenerators\IMenuNodeGenerator.cs" />
     <Compile Include="Ioc\BasicContainer.cs" />

@@ -5,7 +5,7 @@ namespace MenuGen.Ioc
 {
     public interface IContainerAdapter
     {
-        T GetInstance<T>(Type type) where T : class;
-        IEnumerable<T> GetInstances<T>(Type type) where T : class;
+        object GetInstance(Type type);
+        IEnumerable<object> GetInstances(Type type);
     }
 }

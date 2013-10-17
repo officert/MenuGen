@@ -29,30 +29,19 @@ namespace MenuGen.SampleApp
             _menuGen.Init(x =>
             {
                 //x.ContainerAdapter = new NinjectContainerAdapter();
-                x.Container.For<IMenuNodeGenerator>()
-                    .Use<EmployeesMenuGenerator>().Named("EmployeeGenerator");
+                x.Container.For<IMenuNodeGenerator>().Use<EmployeesMenuGenerator>().Named("EmployeeGenerator");
             });
         }
     }
 
     public class NinjectContainerAdapter : IContainerAdapter
     {
-        public T GetInstance<T>(System.Type type) where T : class
+        public object GetInstance(System.Type type)
         {
             throw new System.NotImplementedException();
         }
 
-        public System.Collections.Generic.IEnumerable<T> GetInstances<T>(System.Type type) where T : class
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void Register<T>(System.Type type) where T : class
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public ContainerMapping For<T>() where T : class
+        public System.Collections.Generic.IEnumerable<object> GetInstances(System.Type type)
         {
             throw new System.NotImplementedException();
         }

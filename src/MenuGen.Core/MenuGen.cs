@@ -24,6 +24,8 @@ namespace MenuGen
 
         public void Init(Action<MenuGenSetup> setup)
         {
+            var assembly = Assembly.GetCallingAssembly();
+
             _container = new BasicContainer();
             _containerAdapter = new InternalContainerAdapter(_container);
 
@@ -33,12 +35,15 @@ namespace MenuGen
                 ContainerAdapter = _containerAdapter
             };
 
-            //setup(menuGenOptions);
+            setup(menuGenOptions);
 
-            //_container.For<IMenuNodeGenerator>().Use<ReflectionMenuNodeGenerator>();
+            _container.For<IMenuNodeTreeBuilder>().Use<MenuNodeTreeBuilder>();
+
+            _container.For<IMenuNodeGenerator>().Use<ReflectionMenuNodeGenerator>();
+
+            _container.For<Assembly>().Use(assembly);
+
             //TODO: register an XML node generator
-
-            var assembly = Assembly.GetCallingAssembly();
 
             var menuImpls = GetSubClassesOfGenericType<MenuBase<IMenuNodeGenerator>>(assembly.GetTypes());
 
@@ -46,30 +51,30 @@ namespace MenuGen
             {
                 var menuGeneratorType = GetMenuGeneratorType(menuImpl);
 
-                //var menuNodeGenerator = _containerAdapter.GetInstance<IMenuNodeGenerator>(menuGeneratorType);
+                var menuNodeGenerator = _containerAdapter.GetInstance(menuGeneratorType).Cast<IMenuNodeGenerator>();
 
-                IMenuNodeGenerator menuNodeGenerator;
+                //IMenuNodeGenerator menuNodeGenerator;
 
-                var constructor = menuGeneratorType.GetConstructors().FirstOrDefault();
-                List<ParameterInfo> constructorArgs = null;
+                //var constructor = menuGeneratorType.GetConstructors().FirstOrDefault();
+                //List<ParameterInfo> constructorArgs = null;
 
-                if (constructor != null)
-                {
-                    constructorArgs = constructor.GetParameters().ToList();
-                }
+                //if (constructor != null)
+                //{
+                //    constructorArgs = constructor.GetParameters().ToList();
+                //}
 
-                //TODO: creation of MenuGenerator instances should be delegated to an IOC container - a lightweight internal one
-                //TODO: that can be swapped out for whatever IOC the user wants to use. That way a user can have their IOC inject any
-                //TODO: other instances that their MenuGenerator needs to generate menu nodes - (ie. some data access service, etc...)
+                ////TODO: creation of MenuGenerator instances should be delegated to an IOC container - a lightweight internal one
+                ////TODO: that can be swapped out for whatever IOC the user wants to use. That way a user can have their IOC inject any
+                ////TODO: other instances that their MenuGenerator needs to generate menu nodes - (ie. some data access service, etc...)
 
-                if (constructorArgs != null && constructorArgs.Count > 1)
-                {
-                    menuNodeGenerator = Activator.CreateInstance(menuGeneratorType, MenuNodeTreeBuilder, assembly).Cast<IMenuNodeGenerator>();
-                }
-                else
-                {
-                    menuNodeGenerator = Activator.CreateInstance(menuGeneratorType, MenuNodeTreeBuilder).Cast<IMenuNodeGenerator>();
-                }
+                //if (constructorArgs != null && constructorArgs.Count > 1)
+                //{
+                //    menuNodeGenerator = Activator.CreateInstance(menuGeneratorType, MenuNodeTreeBuilder, assembly).Cast<IMenuNodeGenerator>();
+                //}
+                //else
+                //{
+                //    menuNodeGenerator = Activator.CreateInstance(menuGeneratorType, MenuNodeTreeBuilder).Cast<IMenuNodeGenerator>();
+                //}
 
                 var menu = new MenuModel
                 {
@@ -126,24 +131,19 @@ namespace MenuGen
             _container = container;
         }
 
-        public T GetInstance<T>(Type type) where T : class
+        public object GetInstance(Type type) 
         {
-            return _container.GetInstance<T>(type);
+            return _container.GetInstance(type);
         }
 
-        public IEnumerable<T> GetInstances<T>(Type type) where T : class
+        public IEnumerable<object> GetInstances(Type type)
         {
-            return _container.GetInstances<T>(type);
+            return _container.GetInstances(type);
         }
 
-        public void Register<T>(Type type) where T : class
+        public DependencyMap For<T>() where T : class
         {
-            throw new NotImplementedException();
-        }
-
-        public ContainerMapping For<T>() where T : class
-        {
-            throw new NotImplementedException();
+            return _container.For<T>();
         }
     }
 
