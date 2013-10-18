@@ -13,15 +13,12 @@ You can optionally specify an adapter for the internal container so you can use 
 
 ## Installation
 
-1. [Instaling via NuGet](Installing via NuGet)
+1. [Installing via NuGet](Installing via NuGet)
 
-##Getting Setup
-
-1. Global.asax
+###Global.asax
 In your global.asax you will need to instatiate MenuGen.
 
 Your Application_Start() method should look something like this:
-#### Application_Start
 ``` c#
 protected void Application_Start()
 {
@@ -33,12 +30,15 @@ protected void Application_Start()
     BundleConfig.RegisterBundles(BundleTable.Bundles);
 
     _menuGen = new MenuGen();
+    _menuGen.Init();
 }
 ```
+After calling Init() MenuGen will scan your assembly for any Types that dervives from MenuBase. For each type it finds
+it will create a new Menu of site nodes.
 
+2. Creating Menus
 
 ##IOC Container
 
-1. Container
-2. Container Adapter
-
+1. [Container](#IOC Container)
+2. [Container Adapter](#IOC Container Adapter)
