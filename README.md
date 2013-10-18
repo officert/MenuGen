@@ -11,11 +11,12 @@ MenuGen class and allows you to easily plug in your own implementations for vari
 
 You can optionally specify an adapter for the internal container so you can use your own IOC container.
 
-## Installation
+### Installation
 
 1. [Installing via NuGet](Installing via NuGet)
 
 ###Global.asax
+
 In your global.asax you will need to instatiate MenuGen.
 
 Your Application_Start() method should look something like this:
@@ -36,7 +37,7 @@ protected void Application_Start()
 After calling Init() MenuGen will scan your assembly for any Types that dervives from MenuBase. For each type it finds
 it will create a new Menu of site nodes.
 
-2. Creating Menus
+### Creating Menus
 
 ##IOC Container
 
