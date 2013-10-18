@@ -137,7 +137,7 @@
     </Compile>
     <Compile Include="Ioc\IocControllerFactory.cs" />
     <Compile Include="MenuGenerators\ItemsMenuGenerator.cs" />
-    <Compile Include="Menus\EmployeesMenu.cs" />
+    <Compile Include="Menus\ItemsMenu.cs" />
     <Compile Include="Menus\HeaderMenu.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Item.cs" />

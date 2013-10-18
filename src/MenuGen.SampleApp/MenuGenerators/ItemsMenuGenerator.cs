@@ -29,7 +29,9 @@ namespace MenuGen.SampleApp.MenuGenerators
                     ControllerName = "store",
                     ActionName = "item",
                     Clickable = true,
-                    HtmlAttributes = new { Id = item.Id }
+                    HtmlAttributes = new { Id = item.Id },
+                    Key = string.Format("Item{0}", item.Id),
+                    Text = item.Name
                 });
             }
 

@@ -10,14 +10,14 @@ properties {
   $nuget_dir = "$base_dir\nuget"
   $build_dir = "$base_dir\build"
   #Project settings
-  $projectName = 'CmsLite'
+  $projectName = 'MenuGen'
   #Database properties
   $databaseServer = '.'
-  $databaseName = 'cmslite_local'
+  $databaseName = 'MenuGen_SampleApp'
   #NuGet settings
   $nuget_tempdir = "$base_dir\nuget-temp"
-  $nuget_packageName = 'CmsLiteCore'
-  $nuget_version = '6.0'
+  $nuget_packageName = ''
+  $nuget_version = '0.0'
 }
 
 task default -depends Test
@@ -40,24 +40,14 @@ task ? -Description "Helper to display task info" {
 
 # ------------------------------------ Database Tasks ------------------------------- 
 
-task CreateUsers {
+task LoadSampleData {
 	cd $tools_dir\sqlcmd\
-	#& $tools_dir\sqlcmd\sqlcmd.exe -E -S $databaseServer -d $databaseName -i $database_dir\scripts\DeleteTestUsers.sql
-	#& $tools_dir\sqlcmd\sqlcmd.exe -E -S $databaseServer -d $databaseName -i $database_dir\scripts\LoadTestUsers.sql
-
-	& sqlcmd -E -S $databaseServer -d $databaseName -i $database_dir\scripts\DeleteTestUsers.sql
-	& sqlcmd -E -S $databaseServer -d $databaseName -i $database_dir\scripts\LoadTestUsers.sql
+	& sqlcmd -E -S $databaseServer -d $databaseName -i $database_dir\scripts\LoadSampleData.sql
 }
 
 task DeleteData {
 	cd $tools_dir\sqlcmd\
-	#& $tools_dir\sqlcmd\sqlcmd.exe -E -S $databaseServer -d $databaseName -i $database_dir\scripts\DeleteData.sql
 	& sqlcmd -E -S $databaseServer -d $databaseName -i $database_dir\scripts\DeleteData.sql
-}
-task DeleteIntData {
-	cd $tools_dir\sqlcmd\
-	#& $tools_dir\sqlcmd\sqlcmd.exe -E -S $databaseServer -d $databaseName -i $database_dir\scripts\DeleteData.sql
-	& sqlcmd -E -S $databaseServer -d "cmslite_integration" -i $database_dir\scripts\DeleteData.sql
 }
 
 # ------------------------------------ NuGet Tasks ---------------------------------- 
@@ -89,52 +79,8 @@ task Nuget-Pack {
 
 # ------------------------------------ Tasks ---------------------------------------- 
 
-task CopyAllMvc -depends CopyViews, CopyScripts, CopyContent {
-}
-
-task CopyViews {
-	Copy-Item $source_dir\CmsLite.Core\Areas\Admin\Views $source_dir\CmsLite.TestApp\Areas\Admin -force -recurse
-}
-
-task CopyScripts {
-	Copy-Item $source_dir\CmsLite.Core\Areas\Admin\Scripts $source_dir\CmsLite.TestApp\Areas\Admin -force -recurse
-}
-
-task CopyContent {
-	Copy-Item $source_dir\CmsLite.Core\Areas\Admin\Content $source_dir\CmsLite.TestApp\Areas\Admin -force -recurse
-}
-
-task DeleteAllMvc {
-	Remove-Item $source_dir\CmsLite.TestApp\Areas\Admin -force -recurse
-}
-
 # ------------------------------------ Build Tasks ---------------------------------- 
 
-task CreateAdminZip {
-	New-Item $build_dir\build-artifacts -type directory -force
-
-	#Copy-Item $source_dir\cmslite.core\Areas\Admin $build_dir\build-artifacts\Admin -recurse -force
-
-	ZipFiles $build_dir\build-artifacts\Admin.zip $source_dir\cmslite.core\Areas\Admin
-}
-
-task CompileJs {
-	$outputdir = "$build_dir\javascript"
-
-	$sourcedir = "$source_dir\CmsLite.Core\Areas\Admin\Scripts\source\hello.js"
-
-	New-Item $outputdir -type directory -force
-
-	$java = "$tools_dir\java"
-
-	Write-Host "Output dir = $outputdir" -ForegroundColor Yellow
-	Write-Host "Source dir = $sourcedir" -ForegroundColor Yellow
-	
-	cd C:\Users\tofficer\Code\cmslite\default\src\CmsLite.Core\Areas\Admin\Scripts\Source
-	#& $tools_dir\java\java.exe -jar $tools_dir\googleclosurecompiler\compiler.jar —js hello.js —js_output_file C:\Users\tofficer\Code\cmslite\default\build\javascript\foobar.min.js
-
-	& $tools_dir\java\java.exe -jar $tools_dir\googleclosurecompiler\compiler.jar -help
-}
 
 # ------------------------------------ Functions ------------------------------------ 
 

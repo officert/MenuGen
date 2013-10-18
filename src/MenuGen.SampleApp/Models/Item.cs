@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MenuGen.SampleApp.Models
 {
@@ -15,5 +16,8 @@ namespace MenuGen.SampleApp.Models
         public string Description { get; set; }
 
         public virtual ICollection<Category> Categories { get; set; }
+
+        [Column(TypeName = "Money")]
+        public decimal Price { get; set; }
     }
 }

@@ -5,6 +5,6 @@ namespace MenuGen
 {
     public interface IMenuNodeTreeBuilder
     {
-        IEnumerable<MenuNodeModel> BuildMenuNodeTrees(Dictionary<string, MenuNodeModel> lookup);
+        IEnumerable<MenuNodeModel> BuildMenuNodeTrees(IEnumerable<MenuNodeModel> menuNodes);
     }
 }

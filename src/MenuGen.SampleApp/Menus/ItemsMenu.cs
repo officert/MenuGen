@@ -2,7 +2,7 @@
 
 namespace MenuGen.SampleApp.Menus
 {
-    public class EmployeesMenu : MenuBase<ItemsMenuGenerator>
+    public class ItemsMenu : MenuBase<ItemsMenuGenerator>
     {
     }
 }

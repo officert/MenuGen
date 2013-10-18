@@ -17,18 +17,12 @@ namespace MenuGen.MenuNodeGenerators
 
         public IEnumerable<MenuNodeModel> BuildMenuNodeTrees()
         {
-            var menuNodes = GenerateMenuNodes();
-
-            if (menuNodes == null || !menuNodes.Any()) return null;
-
-            var lookup = menuNodes.ToDictionary(x => x.Key);
-
-            return _menuNodeTreeBuilder.BuildMenuNodeTrees(lookup);
+            return _menuNodeTreeBuilder.BuildMenuNodeTrees(GenerateMenuNodes());
         }
 
         public virtual IEnumerable<MenuNodeModel> GenerateMenuNodes()
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("Subclasses of MenuNodeGeneratorBase must provide their own implementation of GenerateMenuNodes");
         }
     }
 }
