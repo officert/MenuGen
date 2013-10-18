@@ -103,6 +103,8 @@ namespace MenuGen
             {
                 var menuGeneratorType = GetMenuGeneratorType(menuImpl);
 
+                //TODO: for the reflection generator need to figure out how to pass it the MenuName,
+                //TODO: that way it knows which Actions to create menu nodes for
                 var menuNodeGenerator = _containerAdapter.GetInstance(menuGeneratorType).Cast<IMenuNodeGenerator>();
 
                 //IMenuNodeGenerator menuNodeGenerator;

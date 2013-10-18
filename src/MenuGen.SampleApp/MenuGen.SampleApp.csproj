@@ -240,15 +240,14 @@
     <Content Include="Views\Shared\DisplayTemplates\BootstrapMenuModel.cshtml" />
     <Content Include="Views\Store\Item.cshtml" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <Content Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\MenuGen.Core\MenuGen.csproj">
+    <ProjectReference Include="..\MenuGen\MenuGen.csproj">
       <Project>{792f9362-b679-4b7c-9a00-9763c0d4596e}</Project>
       <Name>MenuGen</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -10,6 +10,9 @@ namespace MenuGen.MenuNodeGenerators
 {
     public class ReflectionMenuNodeGenerator : MenuNodeGeneratorBase
     {
+        //TODO: need to support multiple menus using the attribute's Menu property
+        //TODO: need to pass in the name of the Menu
+
         private readonly Assembly _callingAssembly;
 
         public ReflectionMenuNodeGenerator(IMenuNodeTreeBuilder menuNodeTreeBuilder, Assembly callingAssembly) : base(menuNodeTreeBuilder)
