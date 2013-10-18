@@ -2,9 +2,10 @@ MenuGen
 ===
 
 Menu Gen is a site menu generator for MVC. It provides a variety of ways to create site menus in your MVC 
-application. Out of the box it contains an attribute-based generator for creating menus by decorating your controller 
-actions with attributes, an xml generator so you can optionally declare your menus in xml, as well as a base class 
-you can dervive from to create additional menu generators (e.g. for a sql database).
+application. Out of the box it contains an attribute-based reflection node generator for creating menus by 
+decorating your controller actions with attributes, an xml node generator so you can optionally declare your 
+menus in xml, as well as a base class you can dervive from to create additional menu generators 
+(e.g. for a sql database).
 
 MenuGen is built using a very light weight [IOC Container](https://github.com/officert/MenuGen/wiki/IOC-Container). 
 The internal container is exposed via the MenuGen class and allows you to easily plug in your own implementations 
@@ -42,12 +43,13 @@ Each type that it finds will create a new menu of site nodes that you can then a
 
 ## Creating Menus
 
-MenuGen allows you to define as many menus for your site as you like each using a different menu generator. Start by
-creating a new class that dervives from `MenuBase`. `MenuBase` is an abstract class with a type argument of
+MenuGen allows you to define as many menus for your site as you like each using a different menu node generator. 
+Start by creating a new class that dervives from `MenuBase`. `MenuBase` is an abstract class with a type argument of
 `IMenuNodeGenerator`. The type argument for this class is any implementation of `IMenuNodeGenerator`, which allows
-you to create menus using any of the built in menu generators, as well as supplying your own custom implementation.
+you to create menus using any of the built in menu node generators, as well as supplying your own custom
+implementation.
 
-Here is an example of a menu that uses the build in `ReflectionMenuNodeGenerator`.
+Here is an example of a menu that uses the built in `ReflectionMenuNodeGenerator`.
 ``` c#
 public class HeaderMenu : MenuBase<ReflectionMenuNodeGenerator>
 {
