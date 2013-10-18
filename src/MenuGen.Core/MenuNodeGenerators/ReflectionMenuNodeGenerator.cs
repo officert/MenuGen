@@ -50,7 +50,6 @@ namespace MenuGen.MenuNodeGenerators
 
             var menuNodeModel = new MenuNodeModel
             {
-                AreaName = attribute.AreaName,
                 ControllerName = controllerName.ToLower().Replace("controller", ""),
                 ActionName = action.Name,
                 Order = attribute.Order,
@@ -58,7 +57,9 @@ namespace MenuGen.MenuNodeGenerators
                 Clickable = attribute.Clickable,
                 ChildMenu = new MenuModel(),
                 Key = attribute.Key,
-                ParentKey = attribute.ParentKey
+                ParentKey = attribute.ParentKey,
+                RouteValues = attribute.RouteValues,
+                HtmlAttributes = attribute.HtmlAttributes
             };
 
             return menuNodeModel;

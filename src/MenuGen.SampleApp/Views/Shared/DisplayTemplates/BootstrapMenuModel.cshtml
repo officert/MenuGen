@@ -11,12 +11,12 @@
             {
                 <ul class="dropdown-menu">
                     <li>
-                        <a href="@Url.Action(node.ActionName, node.ControllerName, new { @area = node.AreaName })">@node.Text</a>
+                        <a href="@Url.Action(node.ActionName, node.ControllerName, node.RouteValues)">@node.Text</a>
                     </li>
                     @foreach (var child in node.ChildMenu.MenuNodes)
                     {
                         <li>
-                            <a href="@Url.Action(child.ActionName, child.ControllerName, new { @area = child.AreaName })">@child.Text</a>
+                            <a href="@Url.Action(child.ActionName, child.ControllerName, child.RouteValues)">@child.Text</a>
                         </li>
                     }
                 </ul>

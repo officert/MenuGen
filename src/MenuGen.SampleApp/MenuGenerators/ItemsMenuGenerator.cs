@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Web.Routing;
 using MenuGen.MenuNodeGenerators;
 using MenuGen.Models;
 using MenuGen.SampleApp.Data;
@@ -11,7 +12,8 @@ namespace MenuGen.SampleApp.MenuGenerators
     {
         private readonly IDbContext _dbContext;
 
-        public ItemsMenuGenerator(IMenuNodeTreeBuilder menuNodeTreeBuilder, IDbContext dbContext) : base(menuNodeTreeBuilder)
+        public ItemsMenuGenerator(IMenuNodeTreeBuilder menuNodeTreeBuilder, IDbContext dbContext)
+            : base(menuNodeTreeBuilder)
         {
             _dbContext = dbContext;
         }
@@ -29,8 +31,11 @@ namespace MenuGen.SampleApp.MenuGenerators
                     ControllerName = "store",
                     ActionName = "item",
                     Clickable = true,
-                    HtmlAttributes = new { Id = item.Id },
                     Key = string.Format("Item{0}", item.Id),
+                    RouteValues = new RouteValueDictionary
+                    {
+                        { "Id", item.Id }
+                    },
                     Text = item.Name
                 });
             }

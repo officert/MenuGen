@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using System.Linq;
 using System.Web.Mvc;
 using MenuGen.Attributes;
 using MenuGen.SampleApp.Data;
@@ -26,7 +27,9 @@ namespace MenuGen.SampleApp.Controllers
 
         public ActionResult Item(int id)
         {
-            return View();
+            var items = _dbContext.GetDbSet<Item>().Include(x => x.Categories);
+            var item = items.FirstOrDefault(x => x.Id == id);
+            return View(item);
         }
     }
 }

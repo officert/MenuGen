@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Web.Routing;
 
 namespace MenuGen.Attributes
 {
@@ -36,8 +38,13 @@ namespace MenuGen.Attributes
         public Type[] Menus { get; set; }
 
         /// <summary>
-        /// The name of the area.
+        /// Additional routing data for the node.
         /// </summary>
-        public string AreaName { get; set; }
+        public RouteValueDictionary RouteValues { get; set; }
+
+        /// <summary>
+        /// Html attributes for the node.
+        /// </summary>
+        public Dictionary<string, object> HtmlAttributes { get; set; }
     }
 }

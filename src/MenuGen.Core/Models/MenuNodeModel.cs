@@ -1,11 +1,12 @@
-﻿
+﻿using System.Collections.Generic;
+using System.Web.Routing;
+
 namespace MenuGen.Models
 {
     public class MenuNodeModel
     {
         public string Text { get; set; }
         public int Order { get; set; }
-        public string AreaName { get; set; }
         public string ControllerName { get; set; }
         public string ActionName { get; set; }
         public bool Clickable { get; set; }
@@ -17,7 +18,9 @@ namespace MenuGen.Models
         public string Key { get; set; }
         public string ParentKey { get; set; }
 
-        public object HtmlAttributes { get; set; }
+        public Dictionary<string, object> HtmlAttributes { get; set; }
+
+        public RouteValueDictionary RouteValues { get; set; }
 
         public MenuNodeModel()
         {
