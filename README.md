@@ -21,6 +21,7 @@ You can optionally specify an adapter for the internal container so you can use 
 In your global.asax you will need to instatiate MenuGen.
 
 Your Application_Start() method should look something like this:
+#### Application_Start
 ``` c#
 protected void Application_Start()
 {
@@ -34,6 +35,7 @@ protected void Application_Start()
     _menuGen = new MenuGen();
 }
 ```
+
 
 ##IOC Container
 
