@@ -22,6 +22,16 @@ namespace MenuGen
             return Menus.FirstOrDefault(x => x.Name == menuName);
         }
 
+        public void Init()
+        {
+            var assembly = Assembly.GetCallingAssembly();
+
+            _container = new BasicContainer();
+            _containerAdapter = new InternalContainerAdapter(_container);
+
+            _init(assembly);
+        }
+
         public void Init(Action<MenuGenSetup> setup)
         {
             var assembly = Assembly.GetCallingAssembly();
@@ -37,14 +47,56 @@ namespace MenuGen
 
             setup(menuGenOptions);
 
-            _container.For<IMenuNodeTreeBuilder>().Use<MenuNodeTreeBuilder>();
+            if (menuGenOptions.ContainerAdapter != null && menuGenOptions.ContainerAdapter != _containerAdapter)
+                _containerAdapter = menuGenOptions.ContainerAdapter;    //if they provide an adapter, use it
 
-            _container.For<IMenuNodeGenerator>().Use<ReflectionMenuNodeGenerator>();
+            _init(assembly);
+        }
 
-            _container.For<Assembly>().Use(assembly);
+        private void _init(Assembly assembly)
+        {
+            RegisterDependencies(assembly);
 
             //TODO: register an XML node generator
 
+            GenerateMenus(assembly);
+        }
+
+        #region Private Helpers
+
+        private static IEnumerable<Type> GetSubClassesOfGenericType<T>(IEnumerable<Type> types) where T : class
+        {
+            return types.Where(IsSubTypeOf<T>);
+        }
+
+        private static bool IsSubTypeOf<T>(Type typeToCheckFrom) where T : class
+        {
+            while (true)
+            {
+                var typeToCheckAgainst = typeof(T);
+
+                if (typeToCheckFrom.IsGenericType && typeToCheckFrom.GetGenericTypeDefinition() == typeToCheckAgainst.GetGenericTypeDefinition())
+                {
+                    return true;
+                }
+                if (typeToCheckFrom.BaseType != null)
+                {
+                    typeToCheckFrom = typeToCheckFrom.BaseType;
+                    continue;
+                }
+
+                return false;
+                break;
+            }
+        }
+
+        private static Type GetMenuGeneratorType(Type menuImpl)
+        {
+            return menuImpl.BaseType.GetGenericArguments().FirstOrDefault();
+        }
+
+        private void GenerateMenus(Assembly assembly)
+        {
             var menuImpls = GetSubClassesOfGenericType<MenuBase<IMenuNodeGenerator>>(assembly.GetTypes());
 
             foreach (var menuImpl in menuImpls)
@@ -88,38 +140,15 @@ namespace MenuGen
             }
         }
 
-        #region Private Helpers
-
-        private static IEnumerable<Type> GetSubClassesOfGenericType<T>(IEnumerable<Type> types) where T : class
+        private void RegisterDependencies(Assembly assembly)
         {
-            return types.Where(IsSubTypeOf<T>);
+            _container.For<IMenuNodeTreeBuilder>().Use<MenuNodeTreeBuilder>();
+
+            _container.For<IMenuNodeGenerator>().Use<ReflectionMenuNodeGenerator>();
+
+            _container.For<Assembly>().Use(assembly);
         }
 
-        private static bool IsSubTypeOf<T>(Type typeToCheckFrom) where T : class
-        {
-            while (true)
-            {
-                var typeToCheckAgainst = typeof(T);
-
-                if (typeToCheckFrom.IsGenericType && typeToCheckFrom.GetGenericTypeDefinition() == typeToCheckAgainst.GetGenericTypeDefinition())
-                {
-                    return true;
-                }
-                if (typeToCheckFrom.BaseType != null)
-                {
-                    typeToCheckFrom = typeToCheckFrom.BaseType;
-                    continue;
-                }
-
-                return false;
-                break;
-            }
-        }
-
-        private static Type GetMenuGeneratorType(Type menuImpl)
-        {
-            return menuImpl.BaseType.GetGenericArguments().FirstOrDefault();
-        }
 
         #endregion
     }
