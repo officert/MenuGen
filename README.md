@@ -7,7 +7,7 @@ attributes, an xml generator so you can optionally declare your menus in xml, as
 to create additional menu generators (sql database, etc...).
 
 MenuGen is built using a very light weight [IOC container](IOC Container). The internal container is exposed via the 
-MenuGen class and it allows you to easily plugin your own implementations for various components in MenuGen.
+MenuGen class and allows you to easily plug in your own implementations for various components within MenuGen.
 
 You can optionally specify an adapter for the internal container so you can use your own IOC container.
 
@@ -19,6 +19,21 @@ You can optionally specify an adapter for the internal container so you can use 
 
 1. Global.asax
 In your global.asax you will need to instatiate MenuGen.
+
+Your Application_Start() method should look something like this:
+``` c#
+protected void Application_Start()
+{
+    AreaRegistration.RegisterAllAreas();
+
+    WebApiConfig.Register(GlobalConfiguration.Configuration);
+    FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+    RouteConfig.RegisterRoutes(RouteTable.Routes);
+    BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+    _menuGen = new MenuGen();
+}
+```
 
 ##IOC Container
 
