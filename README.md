@@ -1,7 +1,7 @@
 MenuGen
 ===
 
-Menu Gen is a light weight site menu generator for MVC. It provides a variety of ways to create site menus in your MVC 
+Menu Gen is a site menu generator for MVC. It provides a variety of ways to create site menus in your MVC 
 application. Out of the box it contains an attribute-based generator for creating menus by decorating your controller 
 actions with attributes, an xml generator so you can optionally declare your menus in xml, as well as a base class 
 you can dervive from to create additional menu generators (e.g. for a sql database).
@@ -41,6 +41,18 @@ Each type that it finds will create a new menu of site nodes that you can then a
 (.cshtml or .aspx) using the MenuGen [Html Helper](https://github.com/officert/MenuGen/wiki/Html-Helper).
 
 ## Creating Menus
+
+MenuGen allows you to define as many menus for your site as you like each using a different menu generator. Start by
+creating a new class that dervives from `MenuBase`. `MenuBase` is an abstract class with a type argument of
+`IMenuNodeGenerator`. The type argument for this class is any implementation of `IMenuNodeGenerator`, which allows
+you to create menus using any of the built in menu generators, as well as supplying your own custom implementation.
+
+Here is an example of a menu that uses the build in `ReflectionMenuNodeGenerator`.
+``` c#
+public class HeaderMenu : MenuBase<ReflectionMenuNodeGenerator>
+{
+}
+```
 
 ## Menu Generators
 
