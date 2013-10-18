@@ -43,6 +43,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -127,14 +128,19 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\BlogController.cs" />
-    <Compile Include="Controllers\EmployeesController.cs" />
+    <Compile Include="Controllers\StoreController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Data\IDbContext.cs" />
+    <Compile Include="Data\SampleAppDbContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="MenuGenerators\EmployeesMenuGenerator.cs" />
+    <Compile Include="Ioc\IocControllerFactory.cs" />
+    <Compile Include="MenuGenerators\ItemsMenuGenerator.cs" />
     <Compile Include="Menus\EmployeesMenu.cs" />
     <Compile Include="Menus\HeaderMenu.cs" />
+    <Compile Include="Models\Category.cs" />
+    <Compile Include="Models\Item.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -226,19 +232,15 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\MenuModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\MenuNodeModel.cshtml" />
-    <Content Include="Views\Employees\Index.cshtml" />
-    <Content Include="Views\Employees\BillHenderson.cshtml" />
-    <Content Include="Views\Employees\CarrieJefferson.cshtml" />
+    <Content Include="Views\Store\Index.cshtml" />
     <Content Include="Views\Blog\Index.cshtml" />
     <Content Include="Views\Blog\Post1.cshtml" />
     <Content Include="Views\Blog\Post2.cshtml" />
     <Content Include="Views\Blog\Post3.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\BootstrapMenuModel.cshtml" />
+    <Content Include="Views\Store\Item.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>

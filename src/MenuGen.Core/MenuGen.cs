@@ -76,10 +76,12 @@ namespace MenuGen
                 //    menuNodeGenerator = Activator.CreateInstance(menuGeneratorType, MenuNodeTreeBuilder).Cast<IMenuNodeGenerator>();
                 //}
 
+                var nodeTrees = menuNodeGenerator.BuildMenuNodeTrees();
+
                 var menu = new MenuModel
                 {
                     Name = menuImpl.Name,
-                    MenuNodes = menuNodeGenerator.BuildMenuNodeTrees().ToList()
+                    MenuNodes = nodeTrees == null ? null : nodeTrees.ToList()
                 };
 
                 Menus.Add(menu);
@@ -88,7 +90,7 @@ namespace MenuGen
 
         #region Private Helpers
 
-        private static IEnumerable<Type> GetSubClassesOfGenericType<T>(IEnumerable<Type> types) where T : class 
+        private static IEnumerable<Type> GetSubClassesOfGenericType<T>(IEnumerable<Type> types) where T : class
         {
             return types.Where(IsSubTypeOf<T>);
         }
@@ -97,7 +99,7 @@ namespace MenuGen
         {
             while (true)
             {
-                var typeToCheckAgainst = typeof (T);
+                var typeToCheckAgainst = typeof(T);
 
                 if (typeToCheckFrom.IsGenericType && typeToCheckFrom.GetGenericTypeDefinition() == typeToCheckAgainst.GetGenericTypeDefinition())
                 {
@@ -131,7 +133,7 @@ namespace MenuGen
             _container = container;
         }
 
-        public object GetInstance(Type type) 
+        public object GetInstance(Type type)
         {
             return _container.GetInstance(type);
         }

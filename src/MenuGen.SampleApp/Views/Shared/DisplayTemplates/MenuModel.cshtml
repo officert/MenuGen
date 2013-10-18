@@ -1,14 +1,17 @@
 ﻿@model MenuGen.Models.MenuModel
 
-<ul>
-    @foreach (var node in Model.MenuNodes)
-    {
-        <li>
-            @Html.DisplayFor(m => node)
-            @if (node.ChildMenu != null)
-            {
-                @Html.DisplayFor(x => node.ChildMenu);
-            }
-        </li>
-    }
-</ul>
+@if (Model.MenuNodes != null)
+{
+    <ul>
+        @foreach (var node in Model.MenuNodes)
+        {
+            <li>
+                @Html.DisplayFor(m => node)
+                @if (node.ChildMenu != null)
+                {
+                    @Html.DisplayFor(x => node.ChildMenu);
+                }
+            </li>
+        }
+    </ul>
+}

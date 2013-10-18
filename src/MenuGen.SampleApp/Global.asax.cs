@@ -1,10 +1,13 @@
-﻿using System.Web.Http;
+﻿using System.Data.Entity;
+using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using MenuGen.Ioc;
 using MenuGen.MenuNodeGenerators;
 using MenuGen.SampleApp.App_Start;
+using MenuGen.SampleApp.Data;
+using MenuGen.SampleApp.Ioc;
 using MenuGen.SampleApp.MenuGenerators;
 
 namespace MenuGen.SampleApp
@@ -29,7 +32,11 @@ namespace MenuGen.SampleApp
             _menuGen.Init(x =>
             {
                 //x.ContainerAdapter = new NinjectContainerAdapter();
-                x.Container.For<IMenuNodeGenerator>().Use<EmployeesMenuGenerator>().Named("EmployeeGenerator");
+
+                x.Container.For<IMenuNodeGenerator>().Use<ItemsMenuGenerator>().Named("EmployeeGenerator");
+                x.Container.For<IDbContext>().Use<SampleAppDbContext>();
+
+                ControllerBuilder.Current.SetControllerFactory(new IocControllerFactory(x.Container)); 
             });
         }
     }

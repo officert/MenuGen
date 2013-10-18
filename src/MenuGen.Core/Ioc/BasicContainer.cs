@@ -33,7 +33,18 @@ namespace MenuGen.Ioc
         {
             var mapForType = FindDependencyMaps(type).FirstOrDefault();
 
-            if (mapForType == null) throw new InvalidOperationException(string.Format("no type map exists for type {0}", type));
+            if (mapForType == null)
+            {
+                var newMap = new DependencyMap();
+
+                if (type.IsInterface)
+                    throw new InvalidOperationException(string.Format("No map for interface type '{0}' exists. You must register a map with a concrete implementation to inject this interface.", type));
+
+                newMap.ConcreteType = type;
+
+                //_dependencyMaps.Add(newMap); //TODO: for now don't hold onto to new maps that weren't registered on startup - need to figure out when/how to release objects
+                mapForType = newMap;
+            }
 
             if (mapForType.Instance != null) return mapForType.Instance;
 
