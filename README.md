@@ -1,4 +1,4 @@
 MenuGen
 =======
 
-MVC menus
+###Installing via NuGet
