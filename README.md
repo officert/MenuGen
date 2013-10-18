@@ -1,5 +1,8 @@
 MenuGen
 =======
 
-1. Installation
-⋅⋅* [Instaling via NuGet](Installing via NuGet)
+## Installation
+1. [Instaling via NuGet](Installing via NuGet)
+
+##Getting Setup
+1. 
