@@ -6,6 +6,11 @@ Out of the box it contains an attribute-based generator for creating menus by de
 attributes, an xml generator so you can optionally declare your menus in xml, as well as a base class you can dervive from
 to create additional menu generators (sql database, etc...).
 
+MenuGen is built using a very light weight IOC container. The internal container is exposed via a MenuGen object. The 
+container is used internally to find all concrete implementations. This allows you to easily plugin your own implementations.
+
+You can optionally specify an adapter for the internal container so you can use your own IOC container.
+
 ## Installation
 
 1. [Instaling via NuGet](Installing via NuGet)
