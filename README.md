@@ -6,10 +6,11 @@ Out of the box it contains an attribute-based generator for creating menus by de
 attributes, an xml generator so you can optionally declare your menus in xml, as well as a base class you can dervive from
 to create additional menu generators (sql database, etc...).
 
-MenuGen is built using a very light weight [IOC container](IOC Container). The internal container is exposed via the 
+MenuGen is built using a very light weight [IOC container](IOC-Container). The internal container is exposed via the 
 MenuGen class and allows you to easily plug in your own implementations for various components within MenuGen.
 
-You can optionally specify an adapter for the internal container so you can use your own IOC container.
+You can optionally specify an [adapter](IOC-Container-Adapter) for the internal container so you can plugin 
+your own IOC container.
 
 ### Installation
 
