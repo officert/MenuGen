@@ -17,7 +17,7 @@ namespace MenuGen.SampleApp.Ioc
         {
             return controllerType == null
                        ? null
-                       : (IController)_container.GetInstance(controllerType);
+                       : (IController)_container.Resolve(controllerType);
         }
     }
 }

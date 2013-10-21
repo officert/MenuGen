@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Collections.Generic;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
@@ -12,9 +13,6 @@ using MenuGen.SampleApp.MenuGenerators;
 
 namespace MenuGen.SampleApp
 {
-    // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
-    // visit http://go.microsoft.com/?LinkId=9394801
-
     public class MvcApplication : System.Web.HttpApplication
     {
         private MenuGen _menuGen;
@@ -31,9 +29,7 @@ namespace MenuGen.SampleApp
             _menuGen = new MenuGen();
             _menuGen.Init(x =>
             {
-                //x.ContainerAdapter = new NinjectContainerAdapter();
-
-                x.Container.For<IMenuNodeGenerator>().Use<ItemsMenuGenerator>().Named("EmployeeGenerator");
+                x.Container.For<IMenuNodeGenerator>().Use<ItemsMenuGenerator>();
                 x.Container.For<IDbContext>().Use<SampleAppDbContext>();
 
                 ControllerBuilder.Current.SetControllerFactory(new IocControllerFactory(x.Container)); 
@@ -43,14 +39,14 @@ namespace MenuGen.SampleApp
 
     public class NinjectContainerAdapter : IContainerAdapter
     {
-        public object GetInstance(System.Type type)
+        public object GetInstance(Type type)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public System.Collections.Generic.IEnumerable<object> GetInstances(System.Type type)
+        public IEnumerable<object> GetInstances(Type type)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

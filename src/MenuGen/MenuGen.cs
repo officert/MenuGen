@@ -11,9 +11,8 @@ namespace MenuGen
 {
     public class MenuGen
     {
-        private BasicContainer _container;
+        private Container _container;
         private IContainerAdapter _containerAdapter;
-        private static readonly IMenuNodeTreeBuilder MenuNodeTreeBuilder = new MenuNodeTreeBuilder();
 
         private static readonly ICollection<MenuModel> Menus = new List<MenuModel>();
 
@@ -26,26 +25,26 @@ namespace MenuGen
         {
             var assembly = Assembly.GetCallingAssembly();
 
-            _container = new BasicContainer();
+            _container = new Container();
             _containerAdapter = new InternalContainerAdapter(_container);
 
             _init(assembly);
         }
 
-        public void Init(Action<MenuGenSetup> setup)
+        public void Init(Action<MenuGenConfiguration> configuration)
         {
             var assembly = Assembly.GetCallingAssembly();
 
-            _container = new BasicContainer();
+            _container = new Container();
             _containerAdapter = new InternalContainerAdapter(_container);
 
-            var menuGenOptions = new MenuGenSetup
+            var menuGenOptions = new MenuGenConfiguration
             {
                 Container = _container,
                 ContainerAdapter = _containerAdapter
             };
 
-            setup(menuGenOptions);
+            if(configuration != null) configuration(menuGenOptions);
 
             if (menuGenOptions.ContainerAdapter != null && menuGenOptions.ContainerAdapter != _containerAdapter)
                 _containerAdapter = menuGenOptions.ContainerAdapter;    //if they provide an adapter, use it
@@ -151,7 +150,6 @@ namespace MenuGen
             _container.For<Assembly>().Use(assembly);
         }
 
-
         #endregion
     }
 
@@ -166,21 +164,16 @@ namespace MenuGen
 
         public object GetInstance(Type type)
         {
-            return _container.GetInstance(type);
+            return _container.Resolve(type);
         }
 
         public IEnumerable<object> GetInstances(Type type)
         {
-            return _container.GetInstances(type);
-        }
-
-        public DependencyMap For<T>() where T : class
-        {
-            return _container.For<T>();
+            return _container.ResolveAll(type);
         }
     }
 
-    public class MenuGenSetup
+    public class MenuGenConfiguration
     {
         public IContainer Container { get; set; }
         public IContainerAdapter ContainerAdapter { get; set; }
