@@ -3,9 +3,8 @@ MenuGen
 
 Menu Gen is a site menu generator for MVC. It provides a variety of ways to create site menus in your MVC 
 application. Out of the box it contains an attribute-based reflection node generator for creating menus by 
-decorating your controller actions with attributes, an xml node generator so you can optionally declare your 
-menus in xml, as well as a base class you can dervive from to create additional menu generators 
-(e.g. for a sql database).
+decorating your controller actions with attributes, as well as a base class you can dervive from to create 
+additional menu generators (e.g. for a sql database).
 
 MenuGen is built using a very light weight [IOC Container](https://github.com/officert/MenuGen/wiki/IOC-Container). 
 The internal container is exposed via the MenuGen class and allows you to easily plug in your own implementations 
