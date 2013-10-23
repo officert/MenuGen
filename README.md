@@ -7,8 +7,8 @@ decorating your controller actions with attributes, as well as a base class you 
 additional menu generators (e.g. for a sql database).
 
 MenuGen is built using a very light weight [IOC Container](https://github.com/officert/MenuGen/wiki/IOC-Container). 
-The internal container is exposed via the MenuGen class and allows you to easily plug in your own implementations 
-for various components within MenuGen.
+The internal container is exposed via the MenuGen class and allows you to register dependencies needed for your
+custom menu node generators.
 
 You can optionally specify an [adapter](https://github.com/officert/MenuGen/wiki/IOC-Container-Adapter) for the 
 internal container so you can plugin your own IOC container.
