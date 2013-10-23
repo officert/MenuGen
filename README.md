@@ -1,7 +1,7 @@
 MenuGen
 ===
 
-Menu Gen is a site menu generator for MVC. It provides a variety of ways to create site menus in your MVC 
+Menu Gen is a site menu generator for MVC, and gives you a variety of ways to create site menus in your MVC 
 application. Out of the box it contains an attribute-based reflection node generator for creating menus by 
 decorating your controller actions with attributes, as well as a base class you can dervive from to create 
 additional menu generators (e.g. for a sql database).
