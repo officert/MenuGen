@@ -2,17 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using IocLite;
+using IocLite.Interfaces;
 using MenuGen.Extensions;
-using MenuGen.Ioc;
 using MenuGen.MenuNodeGenerators;
 using MenuGen.Models;
 
 namespace MenuGen
 {
-    public class MenuGen
+    public static class MenuGen
     {
-        private Container _container;
-        private IContainerAdapter _containerAdapter;
+        private static IContainer _container = new Container();
+        private static IContainerAdapter _containerAdapter;
+        private static Assembly _currentAssembly;
 
         private static readonly ICollection<MenuModel> Menus = new List<MenuModel>();
 
@@ -21,41 +23,48 @@ namespace MenuGen
             return Menus.FirstOrDefault(x => x.Name == menuName);
         }
 
-        public void Init()
+        /// <summary>
+        /// Clears any existing cached menus and regenerates them using their appropriate MenuGenerators
+        /// </summary>
+        public static void ClearMenuCache()
+        {
+            Menus.Clear();
+
+            GenerateMenus(_currentAssembly);
+        }
+
+        public static void Init()
         {
             var assembly = Assembly.GetCallingAssembly();
-
-            _container = new Container();
-            _containerAdapter = new InternalContainerAdapter(_container);
 
             _init(assembly);
         }
 
-        public void Init(Action<MenuGenConfiguration> configuration)
+        public static void Init(Action<MenuGenConfiguration> configuration)
         {
-            var assembly = Assembly.GetCallingAssembly();
+            Ensure.ArgumentIsNotNull(configuration, "configuration");
 
-            _container = new Container();
-            _containerAdapter = new InternalContainerAdapter(_container);
+            _currentAssembly = Assembly.GetCallingAssembly();
+
+            _container.Register(new List<IRegistry>
+            {
+                new MenuGenRegistry(_currentAssembly)
+            });
 
             var menuGenOptions = new MenuGenConfiguration
             {
-                Container = _container,
-                ContainerAdapter = _containerAdapter
+                Container = _container
             };
 
-            if(configuration != null) configuration(menuGenOptions);
+            configuration(menuGenOptions);
 
-            if (menuGenOptions.ContainerAdapter != null && menuGenOptions.ContainerAdapter != _containerAdapter)
-                _containerAdapter = menuGenOptions.ContainerAdapter;    //if they provide an adapter, use it
+            _containerAdapter = menuGenOptions.ContainerAdapter;    //if they provide an adapter, use it
 
-            _init(assembly);
+            _init(_currentAssembly);
         }
 
-        private void _init(Assembly assembly)
+        private static void _init(Assembly assembly)
         {
-            RegisterDependencies(assembly);
-
             //TODO: register an XML node generator
 
             GenerateMenus(assembly);
@@ -94,7 +103,7 @@ namespace MenuGen
             return menuImpl.BaseType.GetGenericArguments().FirstOrDefault();
         }
 
-        private void GenerateMenus(Assembly assembly)
+        private static void GenerateMenus(Assembly assembly)
         {
             var menuImpls = GetSubClassesOfGenericType<MenuBase<IMenuNodeGenerator>>(assembly.GetTypes());
 
@@ -104,30 +113,12 @@ namespace MenuGen
 
                 //TODO: for the reflection generator need to figure out how to pass it the MenuName,
                 //TODO: that way it knows which Actions to create menu nodes for
-                var menuNodeGenerator = _containerAdapter.GetInstance(menuGeneratorType).Cast<IMenuNodeGenerator>();
 
-                //IMenuNodeGenerator menuNodeGenerator;
+                var menuNodeGenerator = _container.TryResolve(menuGeneratorType).Cast<IMenuNodeGenerator>();
 
-                //var constructor = menuGeneratorType.GetConstructors().FirstOrDefault();
-                //List<ParameterInfo> constructorArgs = null;
+                if (menuNodeGenerator == null && _containerAdapter != null) menuNodeGenerator = _containerAdapter.TryResolve(menuGeneratorType).Cast<IMenuNodeGenerator>();
 
-                //if (constructor != null)
-                //{
-                //    constructorArgs = constructor.GetParameters().ToList();
-                //}
-
-                ////TODO: creation of MenuGenerator instances should be delegated to an IOC container - a lightweight internal one
-                ////TODO: that can be swapped out for whatever IOC the user wants to use. That way a user can have their IOC inject any
-                ////TODO: other instances that their MenuGenerator needs to generate menu nodes - (ie. some data access service, etc...)
-
-                //if (constructorArgs != null && constructorArgs.Count > 1)
-                //{
-                //    menuNodeGenerator = Activator.CreateInstance(menuGeneratorType, MenuNodeTreeBuilder, assembly).Cast<IMenuNodeGenerator>();
-                //}
-                //else
-                //{
-                //    menuNodeGenerator = Activator.CreateInstance(menuGeneratorType, MenuNodeTreeBuilder).Cast<IMenuNodeGenerator>();
-                //}
+                if(menuNodeGenerator == null) throw new InvalidOperationException("asdfs fasdfasdf");
 
                 var nodeTrees = menuNodeGenerator.BuildMenuNodeTrees();
 
@@ -141,41 +132,31 @@ namespace MenuGen
             }
         }
 
-        private void RegisterDependencies(Assembly assembly)
-        {
-            _container.For<IMenuNodeTreeBuilder>().Use<MenuNodeTreeBuilder>();
-
-            _container.For<IMenuNodeGenerator>().Use<ReflectionMenuNodeGenerator>();
-
-            _container.For<Assembly>().Use(assembly);
-        }
-
         #endregion
-    }
-
-    public class InternalContainerAdapter : IContainerAdapter
-    {
-        private readonly IContainer _container;
-
-        public InternalContainerAdapter(IContainer container)
-        {
-            _container = container;
-        }
-
-        public object GetInstance(Type type)
-        {
-            return _container.Resolve(type);
-        }
-
-        public IEnumerable<object> GetInstances(Type type)
-        {
-            return _container.ResolveAll(type);
-        }
     }
 
     public class MenuGenConfiguration
     {
-        public IContainer Container { get; set; }
+        public IContainer Container { get; internal set; }
         public IContainerAdapter ContainerAdapter { get; set; }
+    }
+
+    public class MenuGenRegistry : Registry
+    {
+        private readonly Assembly _currentAssembly;
+
+        public MenuGenRegistry(Assembly currentAssembly)
+        {
+            _currentAssembly = currentAssembly;
+        }
+
+        public override void Load()
+        {
+            For<IMenuNodeTreeBuilder>().Use<MenuNodeTreeBuilder>();
+
+            For<IMenuNodeGenerator>().Use<ReflectionMenuNodeGenerator>();
+
+            For<Assembly>().Use(_currentAssembly);
+        }
     }
 }

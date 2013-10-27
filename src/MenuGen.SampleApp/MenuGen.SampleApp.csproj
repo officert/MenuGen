@@ -39,6 +39,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="IocLite">
+      <HintPath>..\..\lib\IocLite.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -241,10 +244,6 @@
     <Content Include="Views\Store\Item.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MenuGen.Ioc\MenuGen.Ioc.csproj">
-      <Project>{f563aed1-f667-4e16-985b-6fc4cd909768}</Project>
-      <Name>MenuGen.Ioc</Name>
-    </ProjectReference>
     <ProjectReference Include="..\MenuGen\MenuGen.csproj">
       <Project>{792f9362-b679-4b7c-9a00-9763c0d4596e}</Project>
       <Name>MenuGen</Name>

@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Web.Mvc;
 using System.Web.Routing;
-using MenuGen.Ioc;
+using IocLite.Interfaces;
 
 namespace MenuGen.SampleApp.Ioc
 {
     public class IocControllerFactory : DefaultControllerFactory
     {
         private readonly IContainer _container;
+
         public IocControllerFactory(IContainer container)
         {
             _container = container;

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <id>MenuGen</id>
+    <title>MenuGen</title>
+    <version>1.2</version>
+    <authors>Tim Officer</authors>
+    <owners>Tim Officer</owners>
+    <summary>Opensource .NET MVC Menu Generator</summary>
+    <description>description goes here
+    </description>
+    <projectUrl>http://google.com</projectUrl>
+    <licenseUrl>http://google.com</licenseUrl>
+    <iconUrl>http://google.com</iconUrl>
+    <tags></tags>
+    <language>en-US</language>
+    <copyright></copyright>
+  </metadata>
+</package>

@@ -57,24 +57,15 @@ task Nuget-Pack {
 	
 	#create new directory
 	New-Item $nuget_tempdir\$nuget_packageName\lib\net35 -type directory -force
-	#copy CmsLite.Core.dll to that dir
-	Copy-Item $source_dir\cmslite.core\bin\CmsLite.Core.dll $nuget_tempdir\$nuget_packageName\lib\net35 -force
-	Copy-Item $source_dir\cmslite.core\bin\CmsLite.Data.dll $nuget_tempdir\$nuget_packageName\lib\net35 -force
-	Copy-Item $source_dir\cmslite.core\bin\CmsLite.Domains.dll $nuget_tempdir\$nuget_packageName\lib\net35 -force
-	Copy-Item $source_dir\cmslite.core\bin\CmsLite.Interfaces.dll $nuget_tempdir\$nuget_packageName\lib\net35 -force
-	Copy-Item $source_dir\cmslite.core\bin\CmsLite.Services.dll $nuget_tempdir\$nuget_packageName\lib\net35 -force
-	Copy-Item $source_dir\cmslite.core\bin\CmsLite.Utilities.dll $nuget_tempdir\$nuget_packageName\lib\net35 -force
-	Copy-Item $source_dir\cmslite.core\bin\CmsLite.Resources.dll $nuget_tempdir\$nuget_packageName\lib\net35 -force
-	#copy admin content to content dir
-	Copy-Item $source_dir\cmslite.core\Areas\Admin\Content $nuget_tempdir\$nuget_packageName\content\Areas\Admin\Content -recurse -force
-	Copy-Item $source_dir\cmslite.core\Areas\Admin\Views $nuget_tempdir\$nuget_packageName\content\Areas\Admin\Views -recurse -force
-	Copy-Item $source_dir\cmslite.core\Areas\Admin\Scripts $nuget_tempdir\$nuget_packageName\content\Areas\Admin\Scripts -recurse -force
+	#copy
+	Copy-Item $source_dir\MenuGen\bin\Debug\MenuGen.dll $nuget_tempdir\$nuget_packageName\lib\net35 -force
+	Copy-Item $source_dir\MenuGen.Ioc\bin\Debug\MenuGen.Ioc.dll $nuget_tempdir\$nuget_packageName\lib\net35 -force
 	#copy cms.nuspec file to that dir, two levels higher though
-	Copy-Item $nuget_dir\cms.nuspec $nuget_tempdir\$nuget_packageName -force
+	Copy-Item $nuget_dir\menugen.nuspec $nuget_tempdir\$nuget_packageName -force
 	
 	cd $nuget_tempdir\$nuget_packageName
 	
-	& $tools_dir\nuget\nuget.exe pack $nuget_tempdir\$nuget_packageName\cms.nuspec
+	& $tools_dir\nuget\nuget.exe pack $nuget_tempdir\$nuget_packageName\menugen.nuspec
 }
 
 # ------------------------------------ Tasks ---------------------------------------- 
