@@ -18,7 +18,10 @@
         </div>
         @Html.GetMenu(typeof(HeaderMenu), "BootstrapMenuModel")
     </div>
-    <div class="col-md-12">
+    <div class="col-md-2">
+        @Html.GetMenu(typeof(SidebarMenu))
+    </div>
+    <div class="col-md-10">
         @RenderBody()
     </div>
     @Scripts.Render("~/bundles/scripts")

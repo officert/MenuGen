@@ -12,7 +12,7 @@ namespace MenuGen
 {
     public static class MenuGen
     {
-        private static IContainer _container = new Container();
+        private readonly static IContainer Container = new Container();
         private static IContainerAdapter _containerAdapter;
         private static Assembly _currentAssembly;
 
@@ -46,14 +46,14 @@ namespace MenuGen
 
             _currentAssembly = Assembly.GetCallingAssembly();
 
-            _container.Register(new List<IRegistry>
+            Container.Register(new List<IRegistry>
             {
                 new MenuGenRegistry(_currentAssembly)
             });
 
             var menuGenOptions = new MenuGenConfiguration
             {
-                Container = _container
+                Container = Container
             };
 
             configuration(menuGenOptions);
@@ -109,18 +109,20 @@ namespace MenuGen
 
             foreach (var menuImpl in menuImpls)
             {
+                var menuName = menuImpl.Name;
                 var menuGeneratorType = GetMenuGeneratorType(menuImpl);
 
-                //TODO: for the reflection generator need to figure out how to pass it the MenuName,
-                //TODO: that way it knows which Actions to create menu nodes for
-
-                var menuNodeGenerator = _container.TryResolve(menuGeneratorType).Cast<IMenuNodeGenerator>();
+                var menuNodeGenerator = Container.TryResolve(menuGeneratorType).Cast<IMenuNodeGenerator>();
 
                 if (menuNodeGenerator == null && _containerAdapter != null) menuNodeGenerator = _containerAdapter.TryResolve(menuGeneratorType).Cast<IMenuNodeGenerator>();
 
-                if(menuNodeGenerator == null) throw new InvalidOperationException("asdfs fasdfasdf");
+                if (menuNodeGenerator == null) 
+                    throw new InvalidOperationException(string.Format("No MenuNodeGenerator instance '{0}' was found.", menuGeneratorType));
 
-                var nodeTrees = menuNodeGenerator.BuildMenuNodeTrees();
+                //TODO: hacky workaround - only the reflection menu node generator needs the menu name so far
+                if (!(menuGeneratorType == typeof (ReflectionMenuNodeGenerator))) menuName = null;
+
+                var nodeTrees = menuNodeGenerator.BuildMenuNodeTrees(menuName);
 
                 var menu = new MenuModel
                 {
@@ -153,9 +155,6 @@ namespace MenuGen
         public override void Load()
         {
             For<IMenuNodeTreeBuilder>().Use<MenuNodeTreeBuilder>();
-
-            For<IMenuNodeGenerator>().Use<ReflectionMenuNodeGenerator>();
-
             For<Assembly>().Use(_currentAssembly);
         }
     }

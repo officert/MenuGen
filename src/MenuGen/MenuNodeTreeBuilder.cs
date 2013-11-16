@@ -26,7 +26,7 @@ namespace MenuGen
 
             var lookup = menuNodes.ToDictionary(x => x.Key);
 
-            foreach (var menuNodeModel in lookup.Values)
+            foreach (var menuNodeModel in lookup.Values)    
             {
                 MenuNodeModel parentNodeModel;
                 if (string.IsNullOrEmpty(menuNodeModel.ParentKey) ||

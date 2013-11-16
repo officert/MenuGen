@@ -15,15 +15,16 @@ namespace MenuGen.MenuNodeGenerators
 
         private readonly Assembly _callingAssembly;
 
-        public ReflectionMenuNodeGenerator(IMenuNodeTreeBuilder menuNodeTreeBuilder, Assembly callingAssembly) : base(menuNodeTreeBuilder)
+        public ReflectionMenuNodeGenerator(IMenuNodeTreeBuilder menuNodeTreeBuilder, Assembly callingAssembly)
+            : base(menuNodeTreeBuilder)
         {
             _callingAssembly = callingAssembly;
         }
 
-        public override IEnumerable<MenuNodeModel> GenerateMenuNodes()
+        public override IEnumerable<MenuNodeModel> GenerateMenuNodes(string menuName)
         {
             var controllers = GetControllers(_callingAssembly);
-            var menuNodes = GenerateMenuModelsFromControllerActions(controllers);
+            var menuNodes = GenerateMenuModelsFromControllerActions(controllers, menuName);
 
             return menuNodes;
         }
@@ -71,21 +72,30 @@ namespace MenuGen.MenuNodeGenerators
         /// <summary>
         /// Returns a MethodInfo for each method that has a return type of ActionResult and is marked with the MenuNodeAttribute.
         /// </summary>
-        private IEnumerable<MethodInfo> GetActionsForController(Type controller)
+        private IEnumerable<MethodInfo> GetActionsForController(Type controller, string menuName = null)
         {
             if (controller == null)
                 return null;
 
-            return controller.GetMethods(BindingFlags.Public | BindingFlags.Instance)
-                .Where(action => action.ReturnType == typeof(ActionResult) && action.GetCustomAttributes(typeof(MenuNodeAttribute), false).Length > 0);
+            var actions = controller.GetMethods(BindingFlags.Public | BindingFlags.Instance).Where(action => action.ReturnType == typeof(ActionResult)
+                                 && action.GetCustomAttributes(typeof(MenuNodeAttribute), false).Length > 0).ToList();
+
+            return string.IsNullOrEmpty(menuName)
+                ? actions
+                : from action in actions
+                  let attribute = (MenuNodeAttribute)action.GetCustomAttributes(typeof(MenuNodeAttribute), false).FirstOrDefault()
+                  where attribute != null
+                   && attribute.Menus != null
+                   && attribute.Menus.Any(x => x.Name == menuName)
+                  select action;
         }
 
-        private IEnumerable<MenuNodeModel> GenerateMenuModelsFromControllerActions(IEnumerable<Type> controllers)
+        private IEnumerable<MenuNodeModel> GenerateMenuModelsFromControllerActions(IEnumerable<Type> controllers, string menuName)
         {
             var menuNodes = new List<MenuNodeModel>();
             foreach (var controller in controllers)
             {
-                var actions = GetActionsForController(controller).ToList();
+                var actions = GetActionsForController(controller, menuName).ToList();
                 actions.ForEach(x =>
                 {
                     var menuNode = CreateMenuNode(controller.Name, x);

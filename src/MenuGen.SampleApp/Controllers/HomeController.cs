@@ -12,7 +12,7 @@ namespace MenuGen.SampleApp.Controllers
             return View();
         }
 
-        [MenuNode(Key = "About", Text = "About The Company", Menus = new[] { typeof(HeaderMenu) })]
+        [MenuNode(Key = "About", Text = "About The Company", Menus = new[] { typeof(HeaderMenu), typeof(SidebarMenu) })]
         public ActionResult About()
         {
             return View();

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using MenuGen.Models;
 
 namespace MenuGen.MenuNodeGenerators
@@ -15,12 +14,19 @@ namespace MenuGen.MenuNodeGenerators
             _menuNodeTreeBuilder = menuNodeTreeBuilder;
         }
 
-        public IEnumerable<MenuNodeModel> BuildMenuNodeTrees()
+        public IEnumerable<MenuNodeModel> BuildMenuNodeTrees(string menuName = null)
         {
-            return _menuNodeTreeBuilder.BuildMenuNodeTrees(GenerateMenuNodes());
+            return string.IsNullOrEmpty(menuName)
+                ? _menuNodeTreeBuilder.BuildMenuNodeTrees(GenerateMenuNodes())
+                : _menuNodeTreeBuilder.BuildMenuNodeTrees(GenerateMenuNodes(menuName));
         }
 
         public virtual IEnumerable<MenuNodeModel> GenerateMenuNodes()
+        {
+            throw new NotImplementedException("Subclasses of MenuNodeGeneratorBase must provide their own implementation of GenerateMenuNodes");
+        }
+
+        public virtual IEnumerable<MenuNodeModel> GenerateMenuNodes(string menuName)
         {
             throw new NotImplementedException("Subclasses of MenuNodeGeneratorBase must provide their own implementation of GenerateMenuNodes");
         }

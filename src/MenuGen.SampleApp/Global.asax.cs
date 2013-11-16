@@ -33,8 +33,6 @@ namespace MenuGen.SampleApp
                 });
                 ControllerBuilder.Current.SetControllerFactory(new IocControllerFactory(x.Container));
             });
-
-            MenuGen.ClearMenuCache();
         }
     }
 
@@ -42,7 +40,6 @@ namespace MenuGen.SampleApp
     {
         public override void Load()
         {
-            For<IMenuNodeGenerator>().Use<ItemsMenuGenerator>();
             For<IDbContext>().Use<SampleAppDbContext>();
         }
     }
