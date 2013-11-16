@@ -242,6 +242,7 @@
     <Content Include="Views\Blog\Post3.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\BootstrapMenuModel.cshtml" />
     <Content Include="Views\Store\Item.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\BootstrapSidebarMenuModel.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MenuGen\MenuGen.csproj">

@@ -17,7 +17,7 @@ namespace MenuGen.SampleApp.Controllers
             _dbContext = dbContext;
         }
 
-        [MenuNode(ParentKey = "Home", Key = "Store", Text = "Store", Menus = new[] { typeof(HeaderMenu) })]
+        [MenuNode(ParentKey = "Home", Key = "Store", Text = "Store", Menus = new[] { typeof(HeaderMenu), typeof(SidebarMenu) })]
         public ActionResult Index()
         {
             var items = _dbContext.GetDbSet<Item>().Include(x => x.Categories);

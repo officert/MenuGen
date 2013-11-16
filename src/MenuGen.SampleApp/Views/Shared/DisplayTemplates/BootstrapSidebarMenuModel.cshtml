@@ -1,0 +1,10 @@
+﻿@model MenuGen.Models.MenuModel
+
+<ul class="list-group">
+    @foreach (var node in Model.MenuNodes)
+    {
+        <li class="list-group-item">
+            @Html.DisplayFor(m => node)
+        </li>
+    }
+</ul>

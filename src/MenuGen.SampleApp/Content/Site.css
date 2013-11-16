@@ -7392,3 +7392,10 @@ body {
   padding-top: 50px;
   padding-bottom: 70px;
 }
+#sidebar ul li {
+  padding: 0;
+}
+#sidebar ul li > a {
+  padding: 10px 15px;
+  display: block;
+}
